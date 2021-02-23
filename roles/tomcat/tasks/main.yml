@@ -49,10 +49,11 @@
   copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
 
 - name: Start and enable Tomcat service
-  systemd:
-    name: tomcat
-    state: started
-    enabled: true
-    daemon_reload: true
+  shell: systemctl daemon-reload
+
+- name: start tomcat server 
+  service:
+    name: tomcat 
+    state: restarted
 
 
