@@ -15,15 +15,21 @@
      - name: download tomcat
        unarchive:
           src:  "{{tomcat_url}}"
-          dest: /opt/apache-tomcat-8.5.63
+          dest: /opt/
           remote_src: yes
      - name: copy war file
        copy:
          src: /var/lib/jenkins/workspace/jenkins_ansible/target/LoginWebApp-1.war
          dest: /opt/apache-tomcat-8.5.63/webapps/
+     - name: copying server.xml
+       copy:
+         src: server.xml
+         dest: /opt/apache-tomcat-8.5.63/conf/server.xml
+         mode: 0755
+         force: yes
      - name: Install Tomcat init script
        copy:
-        src: tomcat-initscript.sh
+        src: tomcat.sh
         dest: /etc/init.d/tomcat
         mode: 0755
      - name: reload the web server
