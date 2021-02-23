@@ -16,7 +16,7 @@
 
 - name: copying server.xml
   copy:
-    src: server.xml
+    src: roles/tomcat/templates/server.xml
     dest: /opt/apache-tomcat-8.5.63/conf/server.xml
     mode: 0755
     force: yes
