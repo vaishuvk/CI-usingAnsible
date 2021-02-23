@@ -1,5 +1,5 @@
 - name: playbook to deploy tomcat
-  hosts: localhost
+  hosts: all
   become: yes
   vars:
     tomcat_url: https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.63/bin/apache-tom$
