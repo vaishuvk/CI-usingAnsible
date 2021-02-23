@@ -1,3 +1,4 @@
+---
 - name: playbook to deploy tomcat
   hosts: all
   become: yes
