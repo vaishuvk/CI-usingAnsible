@@ -1,62 +1,30 @@
----
-- name: Install OpenJDK Java
+- name: playbook to deploy tomcat
+  hosts: localhost
   become: yes
-  apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-   openjdk-8-jdk
-
-- name: add group "tomcat"
-  group: name={{tomcat_group}}
-
-- name: add user "tomcat"
-  user: name={{tomcat_user}} group={{tomcat_group}} home=/usr/share/tomcat createhome=no
-  become: True
-  become_method: sudo
-
-- name: Download Tomcat
-  get_url: url=https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.63/bin/apache-tomcat-8.5.63.tar.gz dest=/opt/apache-tomcat-8.5.63.tar.gz
-
-- name: Extract archive
-  command: chdir=/usr/share /bin/tar xvf /opt/apache-tomcat-8.5.63.tar.gz -C /opt/ creates=/opt/apache-tomcat-8.5.63
-
-- name: Symlink install directory
-  file: src=/opt/apache-tomcat-8.5.63 path=/usr/share/tomcat state=link
-
-- name: Change ownership of Tomcat installation
-  file: path=/usr/share/tomcat/ owner=tomcat group=tomcat state=directory recurse=yes
-
-- name: Configure Tomcat server
-  template: src=server.xml dest=/usr/share/tomcat/conf/
-
-  
-- name: Create  sample directory
-  file: 
-    path: "/opt/apache-tomcat-8.5.63/webapps/samples"
-    state: directory
-    mode: 0777
-  become: true
-  
-
-- name: copy war file
-  copy: src=./target/LoginWebApp-1.war dest=/opt/apache-tomcat-8.5.63/webapps/
-
-
-  notify: restart tomcat
-
-- name: Install Tomcat init script
-  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
-
-- name: Start and enable Tomcat service
-  shell: systemctl daemon-reload
-
-- name: start tomcat server 
-  service:
-    name: tomcat 
-    state: restarted
-    
-- name: wait for tomcat to start
-  wait_for: port={{http_port}}
-
-
+  vars:
+    tomcat_url: https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.63/bin/apache-tomcat-8.5.63.tar.gz
+  tasks: 
+     - name: install java
+       package:
+          name: java 
+          state: present 
+     - name: download tomcat
+       unarchive:
+          src:  "{{tomcat_url}}"
+          dest: /opt/apache-tomcat-8.5.63
+          remote_src: yes
+     - name: copy war file
+       copy: 
+         src: ./target/LoginWebApp-1.war 
+         dest: /opt/apache-tomcat-8.5.63/webapps/
+     - name: Install Tomcat init script
+       copy: 
+        src: tomcat-initscript.sh 
+        dest: /etc/init.d/tomcat 
+        mode: 0755
+     - name: reload the web server 
+       shell: systemctl daemon-reload 
+     - name: start tomcat 
+       service: 
+         name: tomcat 
+         state: restarted 
