@@ -35,4 +35,4 @@
     state: restarted
 
 - name: wait for tomcat to start
-  wait_for: port={{http_port}}
+  wait_for: port=8090
