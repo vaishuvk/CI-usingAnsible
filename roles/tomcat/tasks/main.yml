@@ -48,11 +48,11 @@
 - name: Install Tomcat init script
   copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
 
-- name: Reload webserver
-  shell: systemctl daemon-reload
+- name: Start and enable Tomcat service
+  systemd:
+    name: tomcat
+    state: started
+    enabled: true
+    daemon_reload: true
 
-- name: Start Tomcat
-  service: name=tomcat state=restarted
 
-- name: wait for tomcat to start
-  wait_for: port={{http_port}}
