@@ -3,18 +3,16 @@
   become: yes
   package:
     name: openjdk-8-jdk
-    state: present
-    
+    state: present    
          
 - name: download tomcat
   unarchive:
     src:  "{{tomcat_url}}"
     dest: /opt/
     remote_src: yes
-    become: yes
 
 - name: copy war file
-  copy: src=./target/LoginWebApp-1.war dest=/opt/apache-tomcat-8.5.63/webapps/ become=yes
+  copy: src=./target/LoginWebApp-1.war dest=/opt/apache-tomcat-8.5.63/webapps/ 
 
 - name: copying server.xml
   copy:
@@ -22,22 +20,19 @@
     dest: /opt/apache-tomcat-8.5.63/conf/server.xml
     mode: 0755
     force: yes
-    become: yes
   
   notify: restart tomcat
 
 - name: Install Tomcat init script
-  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755 become=yes
+  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
 
 - name: reload the web server
   shell: systemctl daemon-reload
-  become: yes
      
 - name: start tomcat
   service:
     name: tomcat
     state: restarted
-    become: yes
 
 - name: wait for tomcat to start
   wait_for: port={{http_port}}
