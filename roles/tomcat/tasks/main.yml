@@ -1,41 +1,42 @@
 ---
-- name: playbook to deploy tomcat
-  hosts: all
-  become: yes
-  tasks:
-     - name: Install Java 1.7
-       package:
-         name: openjdk-8-jdk
-         state: present
+- name: Install Java 1.7
+  package:
+    name: openjdk-8-jdk
+     state: present
+     become: yes
          
-     - name: download tomcat
-       unarchive:
-         src:  "{{tomcat_url}}"
-         dest: /opt/
-         remote_src: yes  
+- name: download tomcat
+  unarchive:
+    src:  "{{tomcat_url}}"
+    dest: /opt/
+    remote_src: yes
+    become: yes
 
-     - name: copy war file
-       copy: src=./target/LoginWebApp-1.war dest=/opt/apache-tomcat-8.5.63/webapps/
+- name: copy war file
+  copy: src=./target/LoginWebApp-1.war dest=/opt/apache-tomcat-8.5.63/webapps/ become=yes
 
-     - name: copying server.xml
-       copy:
-         src: server.xml
-         dest: /opt/apache-tomcat-8.5.63/conf/server.xml
-         mode: 0755
-         force: yes
+- name: copying server.xml
+  copy:
+    src: server.xml
+    dest: /opt/apache-tomcat-8.5.63/conf/server.xml
+    mode: 0755
+    force: yes
+    become: yes
   
-       notify: restart tomcat
+  notify: restart tomcat
 
-     - name: Install Tomcat init script
-       copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
+- name: Install Tomcat init script
+  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755 become=yes
 
-     - name: reload the web server
-       shell: systemctl daemon-reload
+- name: reload the web server
+  shell: systemctl daemon-reload
+  become: yes
      
-     - name: start tomcat
-       service:
-         name: tomcat
-         state: restarted
+- name: start tomcat
+  service:
+    name: tomcat
+    state: restarted
+    become: yes
 
-     - name: wait for tomcat to start
-       wait_for: port={{http_port}}
+- name: wait for tomcat to start
+  wait_for: port={{http_port}}
