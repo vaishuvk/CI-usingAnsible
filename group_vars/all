@@ -1,5 +1,7 @@
 # Here are variables related to the Tomcat installation
 
+tomcat_url: https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.63/bin/apache-tom$
+
 http_port: 8090
 https_port: 8443
 
