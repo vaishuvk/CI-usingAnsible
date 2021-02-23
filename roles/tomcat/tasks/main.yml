@@ -1,9 +1,10 @@
 ---
 - name: Install Java 1.7
+  become: yes
   package:
     name: openjdk-8-jdk
     state: present
-    become: yes
+    
          
 - name: download tomcat
   unarchive:
