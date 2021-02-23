@@ -1,6 +1,6 @@
 ---
 - name: playbook to deploy tomcat
-  hosts: all
+  hosts: localhost
   become: yes
   vars:
     tomcat_url: https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.63/bin/apache-tom$
@@ -30,7 +30,7 @@
          force: yes
      - name: Install Tomcat init script
        copy:
-        src: tomcat-initscript.sh
+        src: tomcat.sh
         dest: /etc/init.d/tomcat
         mode: 0755
      - name: reload the web server
@@ -39,4 +39,3 @@
        service:
          name: tomcat
          state: restarted
-
