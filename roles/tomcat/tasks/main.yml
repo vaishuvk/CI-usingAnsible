@@ -36,4 +36,4 @@
     
 - name: start tomcat
   become: yes
-  shell: sudo sh /opt/apache-tomcat-8.5.63/bin/startup.sh
+  shell: sh /opt/apache-tomcat-8.5.63/bin/startup.sh
