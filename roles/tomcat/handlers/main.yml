@@ -1,8 +1,1 @@
----
-- name: restart tomcat
-  become: yes
-  service: name=tomcat state=restarted 
 
-- name: restart iptables
-  become: yes
-  service: name=iptables state=restarted
